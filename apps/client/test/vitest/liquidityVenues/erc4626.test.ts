@@ -1,10 +1,11 @@
 import { erc20Abi, erc4626Abi, parseUnits } from "viem";
-import { describe, expect } from "vitest";
-import { encoderTest } from "../../setup.js";
-import { Erc4626 } from "../../../src/liquidityVenues/index.js";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { readContract } from "viem/actions";
+import { describe, expect } from "vitest";
+
+import { Erc4626 } from "../../../src/liquidityVenues/index.js";
 import { steakUSDC, WBTC, USDC } from "../../constants.js";
+import { encoderTest } from "../../setup.js";
 
 describe("erc4626 liquidity venue", () => {
   const liquidityVenue = new Erc4626();

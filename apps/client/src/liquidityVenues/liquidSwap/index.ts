@@ -1,9 +1,11 @@
 import { LIQUID_SWAP_SUPPORTED_NETWORKS } from "@morpho-blue-liquidation-bot/config";
 import { ExecutorEncoder } from "executooor-viem";
-import { LiquidityVenue } from "../liquidityVenue";
 import { Account, Address, Chain, Client, erc20Abi, Hex, parseUnits, Transport } from "viem";
-import { ToConvert } from "../../utils/types";
 import { readContract } from "viem/actions";
+
+import { ToConvert } from "../../utils/types";
+import { LiquidityVenue } from "../liquidityVenue";
+
 import { SwapRouteV2Response } from "./types";
 
 export class LiquidSwapVenue implements LiquidityVenue {
@@ -60,6 +62,6 @@ export class LiquidSwapVenue implements LiquidityVenue {
         functionName: "decimals",
       });
     }
-    return this.assetsDecimals[client.chain.id]![asset]! as number;
+    return this.assetsDecimals[client.chain.id]![asset]!;
   }
 }

@@ -1,10 +1,11 @@
+import { API_REFRESH_INTERVAL } from "@morpho-blue-liquidation-bot/config";
+import { BigIntish } from "@morpho-org/blue-sdk";
 import { type ExecutorEncoder } from "executooor-viem";
 import { type Address, getAddress, maxUint256 } from "viem";
 
 import type { ToConvert } from "../../utils/types";
 import type { LiquidityVenue } from "../liquidityVenue";
-import { BigIntish } from "@morpho-org/blue-sdk";
-import { API_REFRESH_INTERVAL } from "@morpho-blue-liquidation-bot/config";
+
 import {
   PendleMarket,
   PendleMarketsResponse,
@@ -22,7 +23,7 @@ async function getApiData<T extends {}, U>(
   api: "sdk" | "non-sdk" = "sdk",
 ) {
   const queryParams = new URLSearchParams(
-    Object.entries(params).map(([key, value]) => [key, String(value)]) as [string, string][],
+    Object.entries(params).map(([key, value]) => [key, String(value)]),
   ).toString();
 
   const apiPath = api === "sdk" ? `v2/sdk/${chainId}` : `v2/${chainId}`;

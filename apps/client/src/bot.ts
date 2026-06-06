@@ -32,6 +32,7 @@ import type { Pricer } from "./pricers/pricer.js";
 import { CooldownMechanism } from "./utils/cooldownMechanism.js";
 import { fetchWhitelistedVaults } from "./utils/fetch-whitelisted-vaults.js";
 import { fetchLiquidatablePositions, fetchMarketsForVaults } from "./utils/fetchers.js";
+import { Flashbots } from "./utils/flashbots.js";
 import { LiquidationEncoder } from "./utils/LiquidationEncoder.js";
 import { DEFAULT_LIQUIDATION_BUFFER_BPS, WAD, wMulDown } from "./utils/maths.js";
 import type {
@@ -39,7 +40,6 @@ import type {
   LiquidatablePosition,
   PreLiquidatablePosition,
 } from "./utils/types.js";
-import { Flashbots } from "./utils/flashbots.js";
 
 export interface LiquidationBotInputs {
   logTag: string;
@@ -305,11 +305,12 @@ export class LiquidationBot {
         },
       ]);
 
-      return await Flashbots.sendRawBundle(
+      await Flashbots.sendRawBundle(
         signedBundle,
         (await getBlockNumber(this.client)) + 1n,
         this.flashbotAccount,
       );
+      return;
     } else {
       await writeContract(this.client, { address: encoder.address, ...functionData });
     }

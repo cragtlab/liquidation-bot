@@ -1,11 +1,11 @@
-export type TokenConfig = {
+export interface TokenConfig {
   dataFeed: `0x${string}`;
   fee: bigint;
   allowance: bigint;
   stable: boolean;
-};
+}
 
-export type PreviewRedeemInstantParams = {
+export interface PreviewRedeemInstantParams {
   amountMTokenIn: bigint;
   tokenOutConfig: TokenConfig;
   tokenOutDecimals: bigint;
@@ -17,4 +17,4 @@ export type PreviewRedeemInstantParams = {
   instantDailyLimit: bigint;
   STABLECOIN_RATE: bigint;
   waivedFeeRestriction: boolean;
-};
+}

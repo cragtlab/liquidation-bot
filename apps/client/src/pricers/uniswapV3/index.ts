@@ -25,44 +25,56 @@ export class UniswapV3Pricer implements Pricer {
   private decimals: Record<Address, number> = {};
 
   async price(client: Client<Transport, Chain, Account>, asset: Address) {
-    const usdReference = USD_REFERENCE[client.chain.id];
+    const usdReferences = USD_REFERENCE[client.chain.id];
 
-    if (usdReference === undefined) return;
+    if (usdReferences === undefined) return;
 
-    /// TODO: allow multiple USD references
+    if (usdReferences.includes(asset)) return 1;
 
-    if (asset === usdReference) return 1;
+    const allPools: { pool: Address; usdReference: Address }[] = [];
 
-    const pools =
-      this.getCachedPools(asset, usdReference) ??
-      (await this.fetchPools(client, usdReference, asset));
+    for (const usdReference of usdReferences) {
+      const pools =
+        this.getCachedPools(asset, usdReference) ??
+        (await this.fetchPools(client, usdReference, asset));
 
-    if (pools.length === 0) {
+      for (const pool of pools) {
+        allPools.push({ pool, usdReference });
+      }
+    }
+
+    if (allPools.length === 0) {
       return;
     }
 
     try {
       const liquidities = await Promise.all(
-        pools.map(async (pool) => {
+        allPools.map(async ({ pool, usdReference }) => {
+          const amount = await readContract(client, {
+            address: pool,
+            abi: uniswapV3PoolAbi,
+            functionName: "liquidity",
+          });
+
           return {
             pool,
-            amount: await readContract(client, {
-              address: pool,
-              abi: uniswapV3PoolAbi,
-              functionName: "liquidity",
-            }),
+            usdReference,
+            amount,
           };
         }),
       );
 
-      const biggestPool = liquidities.reduce(
-        (max, liquidity) => (max !== null && liquidity.amount > max.amount ? liquidity : max),
-        liquidities[0] ?? null,
-      )?.pool;
-
-      if (!biggestPool) {
+      const firstPool = liquidities[0];
+      if (!firstPool) {
         throw new Error("No Uniswap pool found");
       }
+
+      const biggestPool = liquidities.reduce(
+        (max, liquidity) => (liquidity.amount > max.amount ? liquidity : max),
+        firstPool,
+      );
+
+      const { pool, usdReference } = biggestPool;
 
       const token0 =
         fromHex(asset, "bigint") < fromHex(usdReference, "bigint") ? asset : usdReference;
@@ -70,7 +82,7 @@ export class UniswapV3Pricer implements Pricer {
 
       const [slot0, token0Decimals, token1Decimals] = await Promise.all([
         readContract(client, {
-          address: biggestPool,
+          address: pool,
           abi: uniswapV3PoolAbi,
           functionName: "slot0",
         }),

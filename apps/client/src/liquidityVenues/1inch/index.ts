@@ -1,9 +1,11 @@
 import { API_BASE_URL, slippage, supportedNetworks } from "@morpho-blue-liquidation-bot/config";
-import { ExecutorEncoder } from "executooor-viem";
-import { LiquidityVenue } from "../liquidityVenue";
-import { Address } from "viem";
-import { ToConvert } from "../../utils/types";
 import { BigIntish } from "@morpho-org/blue-sdk";
+import { ExecutorEncoder } from "executooor-viem";
+import { Address } from "viem";
+
+import { ToConvert } from "../../utils/types";
+import { LiquidityVenue } from "../liquidityVenue";
+
 import { SwapParams, SwapResponse } from "./types";
 
 export class OneInch implements LiquidityVenue {

@@ -5,8 +5,8 @@ import { readContract, writeContract } from "viem/actions";
 import { describe, expect } from "vitest";
 
 import { USDC, wstETH } from "../../constants.js";
-import { oneInchTest } from "../../setup.js";
 import { OneInchTest } from "../../helpers.js";
+import { oneInchTest } from "../../setup.js";
 
 describe("1inch liquidity venue", () => {
   // data from 1inch swap API at test block

@@ -1,13 +1,14 @@
 import { midasConfigs } from "@morpho-blue-liquidation-bot/config";
+import { MathLib } from "@morpho-org/blue-sdk";
 import { type ExecutorEncoder } from "executooor-viem";
 import { type Address, encodeFunctionData, erc20Abi, getContract } from "viem";
 import { readContract } from "viem/actions";
 
+import { midasDataFeedAbi, redemptionVaultAbi } from "../../abis/midas";
 import type { ToConvert } from "../../utils/types";
 import type { LiquidityVenue } from "../liquidityVenue";
+
 import { PreviewRedeemInstantParams } from "./types";
-import { midasDataFeedAbi, redemptionVaultAbi } from "../../abis/midas";
-import { MathLib } from "@morpho-org/blue-sdk";
 
 const ONE_HUNDRED_PERCENT = 100n * 100n;
 
