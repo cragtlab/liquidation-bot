@@ -11,8 +11,14 @@ describe("morpho api pricer", () => {
 
   test.sequential("should test price", async ({ client }) => {
     /// Prices at the time of the fork
-    expect(Math.abs((await pricer.price(client, WBTC)) - 68000)).toBeLessThan(1000);
-    expect(Math.abs((await pricer.price(client, WETH)) - 2650)).toBeLessThan(30);
+    const wbtcPrice = await pricer.price(client, WBTC);
+    const wethPrice = await pricer.price(client, WETH);
+
+    expect(wbtcPrice).toBeDefined();
+    expect(wethPrice).toBeDefined();
+
+    expect(Math.abs(wbtcPrice! - 68000)).toBeLessThan(1000);
+    expect(Math.abs(wethPrice! - 2650)).toBeLessThan(30);
     expect(await pricer.price(client, USDC)).toBe(1);
     expect(await pricer.price(client, checksumAddress(randomAddress(1)))).toBeUndefined();
   });

@@ -3,10 +3,10 @@ import { Address, encodeFunctionData, erc20Abi, parseUnits } from "viem";
 import { readContract, writeContract } from "viem/actions";
 import { describe, expect } from "vitest";
 
+import { redemptionVaultAbi } from "../../../src/abis/midas";
 import { MidasVenue } from "../../../src/liquidityVenues/midas";
 import { USDC, WBTC } from "../../constants";
 import { midasTest } from "../../setup";
-import { redemptionVaultAbi } from "../../../src/abis/midas";
 
 const collateral = "0xDD629E5241CbC5919847783e6C96B2De4754e438" as Address; // mTBILL
 const redemptionVault = "0x569D7dccBF6923350521ecBC28A555A500c4f0Ec" as Address;
@@ -31,9 +31,9 @@ describe("Midas liquidity venue", () => {
         encoder,
       );
 
-      const previewRedeemInstantData = liquidityVenue.previewRedeemInstant(redemptionParams!);
+      const previewRedeemInstantData = liquidityVenue.previewRedeemInstant(redemptionParams);
 
-      const { amountTokenOutWithoutFee, feeAmount } = previewRedeemInstantData!;
+      const { amountTokenOutWithoutFee, feeAmount } = previewRedeemInstantData;
 
       encoder.erc20Approve(collateral, redemptionVault, feeAmount);
 
